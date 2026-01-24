@@ -34,9 +34,20 @@ This project uses [Pixi](https://prefix.dev/) for package management.
    pixi run jupyter notebook
    ```
 
+5. **Fix linting errors before commiting:**
+   This only applies to the `dev` environment
+   Use `--unsafe-fixes` only if you know what you're doing!
+
+   ```bash
+   pixi run lint
+   pixi run ruff check . --fix
+   ```
+
 ---
 
 ## 📂 Project Structure
+
+**⚠️ OUTDATED ⚠️**
 
 ```text
 QuantCapital/
@@ -64,4 +75,3 @@ QuantCapital/
   - Agree on some way to store/fetch data long(er) term
   - Fix/implement/unify BitCoinLab/ data directory properly together with other sources
 - Fix relative path issue with jupyter notebooks/
-
