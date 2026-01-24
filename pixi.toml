@@ -2,7 +2,7 @@
 authors = ["Qwacktuz <104035252+Qwacktuz@users.noreply.github.com>"]
 channels = ["conda-forge"]
 name = "QuantCapital"
-platforms = ["osx-arm64"]
+platforms = ["linux-64", "osx-arm64", "win-64"]
 version = "0.1.0"
 
 [tasks]
@@ -15,3 +15,13 @@ matplotlib = ">=3.10.8,<4"
 requests = ">=2.32.5,<3"
 jupyter = ">=1.1.1,<2"
 python-dotenv = ">=1.2.1,<2"
+
+[feature.dev.dependencies]
+ruff = ">=0.14.13,<0.15"
+pre-commit = ">=4.5.1,<5"
+
+[feature.dev.tasks]
+lint = "pre-commit run --all-files"
+
+[environments]
+default = ["dev"]
