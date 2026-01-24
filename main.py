@@ -1,11 +1,16 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Imports from our new modular structure
+# Imports from modular structure
 from loaders import CsvLoader, ResearchBitcoinLoader
 from labelers import ZigZagLabeler
 from indicators import MABands
+
+from dotenv import load_dotenv
 from os import getenv
+
+load_dotenv()
+
 
 # Example usage -> need some kind of proper UI later on
 def main():
@@ -17,9 +22,13 @@ def main():
     # Optional: Log transform like Josep
     df_price["Close_log"] = np.log10(df_price["Close"])
 
+    RB_API_TOKEN = getenv("RESEARCHBITCOIN_API_TOKEN")
+    if not RB_API_TOKEN:
+        raise ValueError("RESEARCHBITCOIN_API_TOKEN is missing from .env file")
+
     print("Loading API On-Chain Data...")
     nupl_loader = ResearchBitcoinLoader(
-        token=f"{getenv('API_TOKEN')}",
+        token=RB_API_TOKEN,
         item="net_unrealized_profit_loss/net_unrealized_profit_loss",
     )
     df_nupl = nupl_loader.load()  # comment out to prevent API errors (uses df_price)
