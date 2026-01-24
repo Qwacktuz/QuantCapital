@@ -1,6 +1,6 @@
 import pandas as pd
 
-from core.interfaces import BaseIndicator
+from .base import BaseIndicator
 
 
 class MABands(BaseIndicator):

@@ -24,7 +24,7 @@ This project uses [Pixi](https://prefix.dev/) for package management.
    Execute the primary entry point to load data, calculate indicators, and plot results.
 
    ```bash
-   pixi run python main.py
+   pixi run python DirectIndicatorLoader.py
    ```
 
 4. **Run Jupyter Notebooks:**

@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from core.interfaces import BaseLabeler
+from .base import BaseLabeler
 
 
 class ZigZagLabeler(BaseLabeler):
@@ -63,14 +63,14 @@ class ZigZagLabeler(BaseLabeler):
         result = df.copy()
         result["zigzag_line"] = zigzag_series.interpolate(method="linear")
         result["is_peak"] = (
-                (zigzag_series.notna())
-                & (result["zigzag_line"] > result["zigzag_line"].shift(1))
-                & (result["zigzag_line"] > result["zigzag_line"].shift(-1))
+            (zigzag_series.notna())
+            & (result["zigzag_line"] > result["zigzag_line"].shift(1))
+            & (result["zigzag_line"] > result["zigzag_line"].shift(-1))
         )
         result["is_trough"] = (
-                (zigzag_series.notna())
-                & (result["zigzag_line"] < result["zigzag_line"].shift(1))
-                & (result["zigzag_line"] < result["zigzag_line"].shift(-1))
+            (zigzag_series.notna())
+            & (result["zigzag_line"] < result["zigzag_line"].shift(1))
+            & (result["zigzag_line"] < result["zigzag_line"].shift(-1))
         )
 
         return result

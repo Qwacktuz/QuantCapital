@@ -2,16 +2,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Imports from our new modular structure
-from core.data import LocalCSVLoader, ResearchBitcoinLoader
-from evaluation.labelers import ZigZagLabeler
-from indicators.volatility import MABands
+from loaders import CsvLoader, ResearchBitcoinLoader
+from labelers import ZigZagLabeler
+from indicators import MABands
 from os import getenv
 
 # Example usage -> need some kind of proper UI later on
 def main():
     # --- 1. Load Data ---
     print("Loading Local Price Data...")
-    price_loader = LocalCSVLoader("ohlcv/btc_1d_data_2018_to_2025.csv")
+    price_loader = CsvLoader("ohlcv/btc_1d_data_2018_to_2025.csv")
     df_price = price_loader.load()
 
     # Optional: Log transform like Josep
