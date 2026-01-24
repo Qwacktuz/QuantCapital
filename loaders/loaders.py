@@ -4,6 +4,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 from .base import BaseLoader
 
+
 class CsvLoader(BaseLoader):
     def __init__(self, filepath: str):
         self.filepath = filepath

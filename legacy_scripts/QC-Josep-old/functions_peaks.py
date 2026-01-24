@@ -15,15 +15,13 @@ def modify_date():
     return nueva_fecha.strftime("%Y-%m-%d")
 
 
-def LoadAPI(token, item="market_value_to_realized_value/mvrv_z", verbose=False, name=None):
-    url = f"https://api.researchbitcoin.net/v1/"
+def LoadAPI(
+    token, item="market_value_to_realized_value/mvrv_z", verbose=False, name=None
+):
+    url = "https://api.researchbitcoin.net/v1/"
     url += item
 
-    params = {
-        "token": token,
-        "date_field": modify_date(),
-        "output_format": "json"
-    }
+    params = {"token": token, "date_field": modify_date(), "output_format": "json"}
 
     if verbose:
         print("REQUESTING DATA FROM:", url)
@@ -40,14 +38,18 @@ def LoadAPI(token, item="market_value_to_realized_value/mvrv_z", verbose=False, 
     df["date"] = pd.to_datetime(df["date"])
     if not name:
         name = item.split("/")[-1]
-        name += "_" + modify_date() + "---" + datetime.today().strftime("%Y-%m-%d") + ".csv"
+        name += (
+            "_" + modify_date() + "---" + datetime.today().strftime("%Y-%m-%d") + ".csv"
+        )
     df.to_csv("./BitCoinLab/" + name, index=False)
 
     return df
 
 
 def LoadOHLCV1d(destiny="OHLCV/"):
-    path = kagglehub.dataset_download("novandraanugrah/bitcoin-historical-datasets-2018-2024")
+    path = kagglehub.dataset_download(
+        "novandraanugrah/bitcoin-historical-datasets-2018-2024"
+    )
     dest = os.getcwd()
     shutil.copytree(path, os.path.join(dest, destiny), dirs_exist_ok=True)
     shutil.rmtree(path)
@@ -116,10 +118,18 @@ def ExponentialDecayMovingAverage(df, column, window_size=None, alpha=None):
     ema = df[column].ewm(alpha=alpha, span=window_size, adjust=False)
     df[column + "_" + "mean_ema"] = ema.mean()
     df[column + "_" + "std_ema"] = ema.std()
-    df[column + "_" + "max_int_ema"] = df[column + "_" + "mean_ema"] + 3 * df[column + "_" + "std_ema"]
-    df[column + "_" + "min_int_ema"] = df[column + "_" + "mean_ema"] - 3 * df[column + "_" + "std_ema"]
-    df[column + "_" + "pos_max_int_ema"] = df[column + "_" + "mean_ema"] + 2.6 * df[column + "_" + "std_ema"]
-    df[column + "_" + "pos_min_int_ema"] = df[column + "_" + "mean_ema"] - 2.6 * df[column + "_" + "std_ema"]
+    df[column + "_" + "max_int_ema"] = (
+        df[column + "_" + "mean_ema"] + 3 * df[column + "_" + "std_ema"]
+    )
+    df[column + "_" + "min_int_ema"] = (
+        df[column + "_" + "mean_ema"] - 3 * df[column + "_" + "std_ema"]
+    )
+    df[column + "_" + "pos_max_int_ema"] = (
+        df[column + "_" + "mean_ema"] + 2.6 * df[column + "_" + "std_ema"]
+    )
+    df[column + "_" + "pos_min_int_ema"] = (
+        df[column + "_" + "mean_ema"] - 2.6 * df[column + "_" + "std_ema"]
+    )
     return df
 
 
@@ -135,22 +145,62 @@ def SignalSerie(df, x_col, y_col, ema=False, title=None, xlabel="Date", ylabel="
 
     plt.figure(figsize=(14, 6))
     plt.plot(df[x_col], df[y_col], color="#0072B2", linewidth=1, label=y_col)
-    plt.plot(df[x_col], df[y_col + "_max_int" + ending], color="red", linewidth=0.7, label="Max 3σ")
-    plt.plot(df[x_col], df[y_col + "_min_int" + ending], color="red", linewidth=0.7, label="Min 3σ")
-    plt.plot(df[x_col], df[y_col + "_pos_max_int" + ending], color="yellow", linewidth=0.7, label="Max 2.6σ")
-    plt.plot(df[x_col], df[y_col + "_pos_min_int" + ending], color="yellow", linewidth=0.7, label="Min 2.6σ")
-    plt.plot(df[x_col], df[y_col + "_mean" + ending], color="green", linewidth=0.8, label="EWMA mean")
+    plt.plot(
+        df[x_col],
+        df[y_col + "_max_int" + ending],
+        color="red",
+        linewidth=0.7,
+        label="Max 3σ",
+    )
+    plt.plot(
+        df[x_col],
+        df[y_col + "_min_int" + ending],
+        color="red",
+        linewidth=0.7,
+        label="Min 3σ",
+    )
+    plt.plot(
+        df[x_col],
+        df[y_col + "_pos_max_int" + ending],
+        color="yellow",
+        linewidth=0.7,
+        label="Max 2.6σ",
+    )
+    plt.plot(
+        df[x_col],
+        df[y_col + "_pos_min_int" + ending],
+        color="yellow",
+        linewidth=0.7,
+        label="Min 2.6σ",
+    )
+    plt.plot(
+        df[x_col],
+        df[y_col + "_mean" + ending],
+        color="green",
+        linewidth=0.8,
+        label="EWMA mean",
+    )
 
     buy_mask = df[x_col + "signal"] == "BUY"
     sell_mask = df[x_col + "signal"] == "SELL"
 
-    plt.scatter(df.loc[buy_mask, x_col],
-                df.loc[buy_mask, y_col],
-                marker="^", color="green", s=70, label="BUY")
+    plt.scatter(
+        df.loc[buy_mask, x_col],
+        df.loc[buy_mask, y_col],
+        marker="^",
+        color="green",
+        s=70,
+        label="BUY",
+    )
 
-    plt.scatter(df.loc[sell_mask, x_col],
-                df.loc[sell_mask, y_col],
-                marker="v", color="red", s=70, label="SELL")
+    plt.scatter(
+        df.loc[sell_mask, x_col],
+        df.loc[sell_mask, y_col],
+        marker="v",
+        color="red",
+        s=70,
+        label="SELL",
+    )
 
     plt.title(title)
     plt.xlabel(xlabel)

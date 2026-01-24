@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import pandas as pd
 
+
 class BaseLabeler(ABC):
     """
     Abstract base class for generating Ground Truth labels (tops/bottoms).
