@@ -2,15 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Imports from modular structure
-from loaders import CsvLoader, ResearchBitcoinLoader
+from loaders import CsvLoader
 from labelers import ZigZagLabeler
-from indicators import MABands
-
-from dotenv import load_dotenv
-from os import getenv
-
-load_dotenv()
-
+from indicators import ma_bands
 
 # Example usage -> need some kind of proper UI later on
 def main():
@@ -22,21 +16,9 @@ def main():
     # Optional: Log transform like Josep
     df_price["Close_log"] = np.log10(df_price["Close"])
 
-    RB_API_TOKEN = getenv("RESEARCHBITCOIN_API_TOKEN")
-    if not RB_API_TOKEN:
-        raise ValueError("RESEARCHBITCOIN_API_TOKEN is missing from .env file")
-
-    print("Loading API On-Chain Data...")
-    nupl_loader = ResearchBitcoinLoader(
-        token=RB_API_TOKEN,
-        item="net_unrealized_profit_loss/net_unrealized_profit_loss",
-    )
-    df_nupl = nupl_loader.load()  # comment out to prevent API errors (uses df_price)
-
     # --- 2. Apply Indicators (Josep's MA Logic) ---
     print("Calculating Volatility Bands...")
-    ma_indicator = MABands(window=100, column="Close_log")
-    bands = ma_indicator.calculate(df_price)
+    bands = ma_bands(df=df_price, window=100, column="Close_log")
 
     # Merge bands back into main DF for plotting
     df_combined = df_price.join(bands)
@@ -104,7 +86,7 @@ def main():
     )
 
     # Plot ZigZag (Ground Truth)
-    # plot the straight lines connecting peaks/troughs
+    # Plot the straight lines connecting peaks/troughs
     zz_points = df_labeled[df_labeled["zigzag_line"].notna()]
     plt.plot(
         zz_points.index,
