@@ -1,2 +1,2 @@
-from .base import BaseLabeler
-from .labelers import ZigZagLabeler
+from .BaseLabeler import BaseLabeler
+from .ZigZagLabeler import ZigZagLabeler

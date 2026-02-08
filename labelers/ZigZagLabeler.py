@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from .base import BaseLabeler
+from .BaseLabeler import BaseLabeler
 
 
 class ZigZagLabeler(BaseLabeler):
