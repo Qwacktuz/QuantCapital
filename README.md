@@ -1,77 +1,73 @@
-# QuantCapital price analysis framework
+# 📈 QuantCapital
 
----
+## ⚡ Quick Start
 
-## 🛠️ Installation & Setup
+This project utilizes **Pixi** for high-performance package management and reproducible environments.
 
-This project uses [Pixi](https://prefix.dev/) for package management.
+### 1. Environment Setup
 
-1. **Clone the repository:**
+Ensure [**Pixi**](https://prefix.dev/) is installed on your system, then initialize the project:
 
-   ```bash
-   git clone <repo_url>
-   cd QuantCapital
-   ```
+```bash
+# Clone the repository
+git clone https://github.com/Qwacktuz/QuantCapital
+cd QuantCapital
 
-2. **Install Dependencies:**
-   Pixi will automatically create a virtual environment and install Python, Pandas, Matplotlib, etc.
+# Synchronize dependencies and lockfile
+pixi install
+```
 
-   ```bash
-   pixi install
-   ```
+### 2. Execution
 
-3. **Run the Main Pipeline:**
-   Execute the primary entry point to load data, calculate indicators, and plot results.
+* **Example usage** `pixi run python main.py`
+* **Normalized indicator pool construction** `pixi run python pool.py`
+* **Research Notebooks** `pixi run jupyter notebooks`
 
-   ```bash
-   pixi run python DirectIndicatorLoader.py
-   ```
-
-4. **Run Jupyter Notebooks:**
-   To explore the research notebooks:
-
-   ```bash
-   pixi run jupyter notebook
-   ```
-
-5. **Fix linting errors before commiting:**
-   This only applies to the `dev` environment
-   Use `--unsafe-fixes` only if you know what you're doing!
-
-   ```bash
-   pixi run lint
-   pixi run ruff check . --fix
-   ```
-
----
-
-## 📂 Project Structure
-
-**⚠️ OUTDATED ⚠️**
+## 📂 Project Architecture
 
 ```text
 QuantCapital/
-├── core/                   # The core framework
-│   ├── interfaces.py       # Abstract Base Classes (The rules/framework for new code)
-│   └── data.py             # Misc. Data Loaders (CSV, APIs)
-├── indicators/             # Technical Analysis Logic
-│   ├── rsi.py              # Relative Strength Index
-│   ├── volatility.py       # MA Bands, EMA Bands
-│   └── trends.py           # Adaptive Trend / Sliding Window logic
-├── evaluation/             # Logic for testing and labeling
-│   └── labelers.py         # ZigZag algorithm for ground truth detection
-├── notebooks/              # Research and Prototyping (Jupyter)
-├── ohlcv/                  # Data storage/cache
-├── main.py                 # Main entrypoint
-└── pixi.toml               # Dependency configuration
+├── indicators/                # Technical analysis implementations
+│   ├── __init__.py            # Exposes indicator classes
+│   ├── indicator.py           # Base Indicator interface
+│   ├── rsi.py                 # Relative Strength Index
+│   ├── trends.py              # Josep's sliding_window_analysis
+│   └── volatility.py          # Josep's 'ExponentialDecayMovingAverage'
+│
+├── labelers/                  # Label generation for supervised learning
+│   ├── __init__.py            # Exposes labeler classes
+│   ├── BaseLabeler.py         # Base Labeler interface
+│   └── ZigZagLabeler.py       # ZigZag-based trend identification
+│
+├── legacy_scripts/            # Deprecated experimental assets
+│
+├── loaders/                   # Data ingestion layer
+│   ├── __init__.py            # Exposes loader classes
+│   ├── BaseLoader.py          # Base data Loader interface
+│   ├── CsvLoader.py           # Local CSV OHLCV ingestion
+│   └── ResearchBitcoinLoader.py # Custom research dataset loader
+│
+├── main.py                    # Core execution entry point
+│
+├── notebooks/                 # Jupyter research & visualization
+│
+├── ohlcv/                     # Local data cache (OHLCV)
+│
+├── pixi.lock                  # Deterministic dependency lock
+├── pixi.toml                  # Manifest & dependency definitions
+│
+├── pool.py                    # Normalized indicator pool construction
+│
+├── README.md                  # Project documentation
+│
+├── resources/                 # Reference papers & academic material
+│
+└── tests/                     # Unit & Integration testing suite
+    └── test_researchbitcoin_loader.py
 ```
 
----
-
-## TODO/FIXME
-
-- Unify data storge solution
-  - Maybe add ohlcv/ to gitignore since these files are technically just fetched from the API as cache
-  - Agree on some way to store/fetch data long(er) term
-  - Fix/implement/unify BitCoinLab/ data directory properly together with other sources
-- Fix relative path issue with jupyter notebooks/
+## 🛠 Active Development (TODO/FIXME)
+* **Data Persistence:** Unify the storage solution for cached OHLCV data.
+* **Git Hygiene:** Add `ohlcv/` to `.gitignore` to prevent caching local API fetches.
+* **Directory Mapping:** Resolve BitcoinLab/ pathing inconsistencies across loaders.
+* **Notebook Context:** Fix relative path resolution for assets within `notebooks/`.
